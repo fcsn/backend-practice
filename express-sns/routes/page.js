@@ -1,18 +1,18 @@
-const express = require('express');
+const express = require('express')
 
-const router = express.Router();
+const router = express.Router()
 
 router.get('/profile', (req, res) => {
-    res.render('profile', { title: '내 정보 - expressSns', user: null });
-});
+    res.render('profile', { title: '내 정보 - expressSns', user: null })
+})
 
 router.get('/join', (req, res) => {
     res.render('join', {
         title: '회원가입 - expressSns',
         user: null,
         joinError: req.flash('joinError'),
-    });
-});
+    })
+})
 
 router.get('/', (req, res, next) => {
     res.render('main', {
@@ -21,6 +21,6 @@ router.get('/', (req, res, next) => {
         user: null,
         loginError: req.flash('loginError'),
     })
-});
+})
 
-module.exports = router;
+module.exports = router
