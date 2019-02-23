@@ -27,8 +27,7 @@ const getPost = async (req, res) => {
 
 const makePost = (req, res, next) => {
     models.Post.create({
-        commentId: req.body.id,
-        content: req.body.content,
+        title: req.body.title,
     })
         .then((result) => {
             console.log(result);
@@ -41,7 +40,8 @@ const makePost = (req, res, next) => {
 }
 
 const getComments = async (req, res) => {
-    const comments = await models.Comment.findAll();
+    const postId = req.params.postId;
+    const comments = await models.Comment.findAll({ where: { postId } });
     return res.json(comments)
 }
 
@@ -53,8 +53,8 @@ const getComment = async (req, res) => {
 
 const makeComment = (req, res, next) => {
     models.Comment.create({
-        commentId: req.body.id,
         content: req.body.content,
+        postId: req.params.id,
     })
         .then((result) => {
             console.log(result);

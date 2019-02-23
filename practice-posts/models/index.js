@@ -16,8 +16,8 @@ db.User = require('./user')(sequelize, Sequelize);
 db.Post = require('./post')(sequelize, Sequelize);
 db.Comment = require('./comment')(sequelize, Sequelize);
 
-db.Post.hasMany(db.Comment, { foreignKey: 'commenter', sourceKey: 'id' });
-db.Comment.belongsTo(db.Post, { foreignKey: 'commenter', targetKey: 'id' });
+// db.Post.hasMany(db.Comment, { foreignKey: 'commenter', sourceKey: 'id' });
+// db.Comment.belongsTo(db.Post, { foreignKey: 'commenter', targetKey: 'id' });
 
 module.exports = db;
 

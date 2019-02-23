@@ -9,7 +9,7 @@ router.get('/deploy', (req, res) => res.body = '무중단배포 성공')
 router.get('/users', getUsers);
 router.get('/users/:id', getUser);
 router.get('/posts', getPosts);
-router.get('/comments', getComments);
+router.get('/posts/:postId/comments', getComments);
 router.get('/posts/:id', getPost);
 router.get('/comments/:id', getComment);
 router.post('/post', makePost);
