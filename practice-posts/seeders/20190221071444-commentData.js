@@ -3,7 +3,6 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
       return queryInterface.bulkInsert('Comments', [{
-        commentId: '1',
         content: 'First Comment'
       }], {});
   },

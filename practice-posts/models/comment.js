@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Comment.associate = function(models) {
     // associations can be defined here
-    Comment.belongsTo(models.Post, { foreignKey: 'postId' });
+    // Comment.belongsTo(models.Post, { foreignKey: 'postId' });
   };
   return Comment;
 };
@@ -21,3 +21,7 @@ module.exports = (sequelize, DataTypes) => {
 // 그런 필드는 없으니깐
 
 // 그러면 이제 요상태에서 서버 다시 시작해서 고고 해보자
+
+// 코멘트 테이블에 포스트아이디가 없넹
+// 마이그레이숀 고고 ㅋㅋ
+
