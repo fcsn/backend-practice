@@ -1,9 +1,9 @@
 const express = require('express')
-const { getUsers, getUser, getPosts, getPost, getComments, getComment, makePost, makeComment } = require('../controller')
+const { getRoot, getUsers, getUser, getPosts, getPost, getComments, getComment, makePost, makeComment } = require('../controller')
 
 const router = express.Router()
 
-router.get('/', (req, res) => res.body = '안녕하세요.')
+router.get('/', getRoot)
 router.get('/deploy', (req, res) => res.body = '무중단배포 성공')
 
 router.get('/users', getUsers);

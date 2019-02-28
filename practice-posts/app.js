@@ -8,3 +8,5 @@ app.use(bodyParser.json())
 app.use('/', router);
 
 app.listen(3000, () => console.log('3000 listen'));
+
+module.exports = app;

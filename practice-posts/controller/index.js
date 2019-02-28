@@ -1,6 +1,7 @@
 const models = require('../models');
 const Joi = require('joi');
 
+const getRoot = (req, res) => res.send('root')
 
 const getUsers = async (req, res) => {
     const users = await models.User.findAll();
@@ -16,35 +17,64 @@ const getUser = async (req, res) => {
     return res.json(user)
 };
 
+// const getPosts = async (req, res) => {
+//     const { offset, limit } = req.query
+//     const posts = await models.Post.findAll(
+//         {
+//             offset: offset * 1,
+//             limit: limit * 1,
+//         }
+//     );
+//     const offsetQuerySchema = Joi.object().keys({
+//         offset: Joi.string().required(),
+//         limit: Joi.string().required(),
+//     })
+//
+//     Joi.validate({ offset: offset, limit: limit }, offsetQuerySchema, (err, value) => {
+//         if (err) {
+//             // send a 422 error response if validation fails
+//             res.status(422).json({
+//                 status: 'error',
+//                 message: 'Invalid request data',
+//                 data: posts
+//             });
+//         } else {
+//             res.json({
+//                 status: 'success',
+//                 message: 'success',
+//                 data: posts
+//             });
+//         }
+//     });
+// }
 const getPosts = async (req, res) => {
     const { offset, limit } = req.query
-    const posts = await models.Post.findAll(
-        {
-            offset: offset * 1,
-            limit: limit * 1,
-        }
-    );
     const offsetQuerySchema = Joi.object().keys({
-        offset: Joi.string().required(),
-        limit: Joi.string().required(),
+        offset: Joi.string().regex(/^(\s|\d)+$/).required().error(new Error('offset error')),
+        limit: Joi.string().regex(/^(\s|\d)+$/).required().error(new Error('limit error')),
     })
 
-    Joi.validate({ offset: offset, limit: limit }, offsetQuerySchema, (err, value) => {
+    Joi.validate({ offset: offset, limit: limit }, offsetQuerySchema, async (err, value) => {
         if (err) {
-            // send a 422 error response if validation fails
             res.status(422).json({
                 status: 'error',
                 message: 'Invalid request data',
-                data: posts
+                data: err.message
             });
         } else {
+            const posts = await models.Post.findAll(
+                {
+                    offset: offset * 1,
+                    limit: limit * 1,
+                }
+            )
             res.json({
                 status: 'success',
                 message: 'success',
                 data: posts
             });
         }
-    });
+    })
 }
 
 const getPost = async (req, res) => {
@@ -107,21 +137,34 @@ const getPost = async (req, res) => {
 // }
 const makePost = (req, res, next) => {
     const postCreateSchema = Joi.object().keys({
-        title: Joi.string(),
+        title: Joi.string().required().error(new Error('title error')),
     })
     const body = req.body
     Joi.validate(body, postCreateSchema, (err, value) => {
-        models.Post.create({
-            title: body.title,
-        })
-            .then((result) => {
-                console.log(result);
-                res.status(201).json(result);
-            })
-            .catch((err) => {
-                console.error(err);
-                next(err);
+        if (err) {
+            res.status(422).json({
+                status: 'error',
+                message: 'Invalid request data',
+                data: err.message
             });
+        } else {
+            const post = models.Post.create({
+                title: body.title,
+            })
+                .then((result) => {
+                    console.log(result);
+                    res.status(201).json(result);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    next(err);
+                });
+            res.json({
+                status: 'success',
+                message: 'success',
+                data: post
+            });
+        }
     })
 }
 
@@ -156,6 +199,7 @@ const makeComment = (req, res, next) => {
 }
 
 module.exports = {
+    getRoot,
     getUsers,
     getUser,
     getPosts,
