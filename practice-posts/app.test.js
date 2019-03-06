@@ -25,13 +25,12 @@ describe('POST /post', () => {
 });
 
 
-// describe('GET /posts/1', function() {
-//     it('responds with json', function(done) {
-//         request(app)
-//             .get('/posts/1')
-//             .auth('root', 1234)
-//             .set('Accept', 'application/json')
-//             .expect('Content-Type', /json/)
-//             .expect(200, done);
-//     });
-// });
+describe('GET /posts/1', () => {
+    it('responds with json', done => {
+        request(app)
+            .get('/posts/1')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200, done);
+    });
+});

@@ -28,8 +28,8 @@ fs
 Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {
         db[modelName].associate(db); // 이제 그럼 associate이거를 자동으로 실행해주는지 확인해보자 보는중 posts/1 조회해바
-    } // 터미널 ㄱ? ㅇㅇ 실행  ㅇㅋㅇㅋ
-});  // 헝 에러가
+    }
+});
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

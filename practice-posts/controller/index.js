@@ -11,10 +11,33 @@ const getUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
     const { id } = req.params;
-
-    const user = await models.User.findOne({ where: { id } });
-    // res.body = user;
+    const user = await models.User.findOne({
+        where: { id },
+        include: [{
+            model: models.Project,
+            as: 'project',
+        }]
+    });
     return res.json(user)
+};
+
+const getProjects = async (req, res) => {
+    const users = await models.Project.findAll();
+    // res.body = users;
+    return res.json(users)
+}
+
+const getProject = async (req, res) => {
+    const { id } = req.params;
+    const project = await models.Project.findOne({
+            where: { id },
+            include: [{
+                model: models.User,
+                as: 'user',
+                attributes: {exclude: 'UserProject'}
+            }],
+    });
+    return res.json(project)
 };
 
 // const getPosts = async (req, res) => {
@@ -47,6 +70,7 @@ const getUser = async (req, res) => {
 //         }
 //     });
 // }
+
 const getPosts = async (req, res) => {
     const { offset, limit } = req.query
     const offsetQuerySchema = Joi.object().keys({
@@ -113,28 +137,13 @@ const getPost = async (req, res) => {
     //     }]
 
     // })
-    const post = await models.Post.findOne({ where: { id }, include: [{
+const post = await models.Post.findOne({ where: { id }, include: [{
         model: models.Comment,
         as: 'comments',
     }] }); // 이런거
     return res.json(post) // 다시 리로드
 }
-// const makePost = (req, res, next) => {
-//     const postCreateSchema = Joi.object().keys({
-//         title: Joi.string(),
-//     })
-//     models.Post.create({
-//         title: req.body.title,
-//     })
-//         .then((result) => {
-//             console.log(result);
-//             res.status(201).json(result);
-//         })
-//         .catch((err) => {
-//             console.error(err);
-//             next(err);
-//         });
-// }
+
 const makePost = (req, res, next) => {
     const postCreateSchema = Joi.object().keys({
         title: Joi.string().required().error(new Error('title error')),
@@ -152,11 +161,11 @@ const makePost = (req, res, next) => {
                 title: body.title,
             })
                 .then((result) => {
-                    console.log(result);
+                    // console.log(result);
                     res.status(201).json(result);
                 })
                 .catch((err) => {
-                    console.error(err);
+                    // console.error(err);
                     next(err);
                 });
             res.json({
@@ -198,14 +207,61 @@ const makeComment = (req, res, next) => {
         });
 }
 
+const makeUser = (req, res, next) => {
+    models.User.create({
+        name: req.body.name,
+        engName: req.body.engName,
+    })
+        .then((result) => {
+            console.log(result);
+            res.status(201).json(result);
+        })
+        .catch((err) => {
+            console.error(err);
+            next(err);
+        });
+}
+
+const makeProject = (req, res, next) => {
+    models.Project.create({
+        work: req.body.work,
+    })
+        .then((result) => {
+            console.log(result);
+            res.status(201).json(result);
+        })
+        .catch((err) => {
+            console.error(err);
+            next(err);
+        });
+}
+
+const makeUserProject = (req, res, next) => {
+    models.UserProject.create({
+        userId: req.body.userId,
+        projectId: req.body.projectId,
+    })
+        .then((result) => {
+            console.log(result);
+            res.status(201).json(result);
+        })
+        .catch((err) => {
+            console.error(err);
+            next(err);
+        });
+}
+
+const getUserProjects = async (req, res, next) => {
+    const userProjects = await models.UserProject.findAll();
+    // res.body = users;
+    return res.json(userProjects)
+}
+
 module.exports = {
     getRoot,
-    getUsers,
-    getUser,
-    getPosts,
-    getPost,
-    getComments,
-    getComment,
-    makeComment,
-    makePost
+    getUsers, getUser, makeUser,
+    getPosts, getPost, makePost,
+    getComments, getComment, makeComment,
+    getProjects, getProject, makeProject,
+    getUserProjects, makeUserProject
 }
