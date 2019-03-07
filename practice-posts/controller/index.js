@@ -252,9 +252,56 @@ const makeUserProject = (req, res, next) => {
 }
 
 const getUserProjects = async (req, res, next) => {
-    const userProjects = await models.UserProject.findAll();
-    // res.body = users;
-    return res.json(userProjects)
+    const { id } = req.params
+    const comment = await models.Comment.findOne({ where: { id } })
+    return res.json(comment)
+}
+
+// 프로젝트 오너가 게스트를 프로젝트에 넣는다 -> POST project
+
+const guestGetUser = async (req, res, next) => {
+    // 게스트 중심 조회
+    const { id } = req.params;
+    const project = await models.User.findOne({
+        where: { id },
+        include: [{
+            model: models.Project,
+            as: 'project',
+            attributes: {exclude: 'UserProject'}
+        }],
+    });
+    return res.json(project)
+}
+
+const hostGetProject = async (req, res, next) => {
+    // 프로젝트 중심 조회
+    const { id } = req.params;
+    const project = await models.Project.findOne({
+        where: { id },
+        include: [{
+            model: models.User,
+            as: 'user',
+            attributes: {exclude: 'UserProject'}
+        }],
+    });
+    return res.json(project)
+}
+
+const guestJoinProject = async (req, res, next) => {
+    // 게스트가 자기가 참여하고 싶은 플젝에 들어간다
+    const { userId, projectId } = req.params;
+    models.UserProject.create({
+        userId: userId,
+        projectId: projectId,
+    })
+        .then((result) => {
+            console.log(result);
+            res.status(201).json(result);
+        })
+        .catch((err) => {
+            console.error(err);
+            next(err);
+        });
 }
 
 module.exports = {
@@ -263,5 +310,6 @@ module.exports = {
     getPosts, getPost, makePost,
     getComments, getComment, makeComment,
     getProjects, getProject, makeProject,
-    getUserProjects, makeUserProject
+    getUserProjects, makeUserProject,
+    hostGetUser, guestGetProject, guestJoinProject
 }

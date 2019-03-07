@@ -5,7 +5,8 @@ const {
     getPosts, getPost, makePost,
     getComments, getComment, makeComment,
     getProjects, getProject, makeProject,
-    getUserProjects, makeUserProject } = require('../controller')
+    getUserProjects, makeUserProject,
+    hostGetUser, guestGetProject, guestJoinProject } = require('../controller')
 
 const router = express.Router()
 
@@ -30,5 +31,9 @@ router.post('/posts/:id/comment', makeComment);
 
 router.get('/userproject', getUserProjects)
 router.post('/userproject', makeUserProject)
+
+router.get('/users/:id/project', guestGetProject)
+router.get('/projects/:id/user', hostGetUser)
+router.post('/users/:userId/projects/:projectId/guests', guestJoinProject)
 
 module.exports = router;
