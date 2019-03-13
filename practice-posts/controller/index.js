@@ -259,8 +259,8 @@ const getUserProjects = async (req, res, next) => {
 
 // 프로젝트 오너가 게스트를 프로젝트에 넣는다 -> POST project
 
-const guestGetUser = async (req, res, next) => {
-    // 게스트 중심 조회
+const guestGetProject = async (req, res, next) => {
+    // 프로젝트 중심 조회
     const { id } = req.params;
     const project = await models.User.findOne({
         where: { id },
@@ -273,8 +273,8 @@ const guestGetUser = async (req, res, next) => {
     return res.json(project)
 }
 
-const hostGetProject = async (req, res, next) => {
-    // 프로젝트 중심 조회
+const hostGetUser = async (req, res, next) => {
+    // 게스트 중심 조회
     const { id } = req.params;
     const project = await models.Project.findOne({
         where: { id },

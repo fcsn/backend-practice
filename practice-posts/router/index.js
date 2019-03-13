@@ -32,8 +32,8 @@ router.post('/posts/:id/comment', makeComment);
 router.get('/userproject', getUserProjects)
 router.post('/userproject', makeUserProject)
 
-router.get('/users/:id/project', guestGetProject)
-router.get('/projects/:id/user', hostGetUser)
+router.get(`/users/:id/project`, guestGetProject)
+router.get(`/projects/:id/user`, hostGetUser)
 router.post('/users/:userId/projects/:projectId/guests', guestJoinProject)
 
 module.exports = router;
